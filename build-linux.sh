@@ -100,8 +100,12 @@ create_signatures() {
   # creates $filename.sha256
   shasum --algorithm 256 "./$target_dir/$file_name" | cut -f1 -d' ' >"./$target_dir/$file_name.sha256"
 
-  # creates $filename.sig
-  signify -S -s "$APPCAST_SECRET_KEY_FILE" -m "./$target_dir/$file_name"
+  # creates $filename.sig; forks have no appcast key, so their artifacts stay unsigned
+  if [ -s "${APPCAST_SECRET_KEY_FILE:-}" ]; then
+    signify -S -s "$APPCAST_SECRET_KEY_FILE" -m "./$target_dir/$file_name"
+  else
+    echo "No appcast signing key; skipping signature for $file_name"
+  fi
 }
 
 build_deb() {

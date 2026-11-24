@@ -131,6 +131,8 @@ jobs:
             target/universal-unknown-linux-gnu/release/aarch64/browsers.aarch64.rpm
             target/universal-unknown-linux-gnu/release/armv7l/browsers.armhfp.rpm
   build-macos:
+    # needs Apple signing secrets that only the upstream repository has
+    if: github.repository == 'Browsers-software/browsers'
     environment: PROD_2028
     runs-on: macos-26
     steps:
@@ -254,6 +256,7 @@ jobs:
             target/universal-apple-darwin/release/browsers_mac.tar.xz.sha256
             target/universal-apple-darwin/release/browsers_mac.tar.xz.sig
   build-windows:
+    if: github.repository == 'Browsers-software/browsers'
     environment: PROD_2028
     runs-on: windows-latest
     steps:
@@ -368,6 +371,7 @@ jobs:
             target/universal-pc-windows-msvc/release/browsers_windows.tar.xz.sha256
             target/universal-pc-windows-msvc/release/browsers_windows.tar.xz.sig
   release:
+    if: github.repository == 'Browsers-software/browsers'
     needs: [ build-linux, build-macos, build-windows ]
     runs-on: ubuntu-latest
     steps:
